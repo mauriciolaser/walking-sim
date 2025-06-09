@@ -19,6 +19,7 @@ jobs:
       VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
       VITE_API_URL: ${{ secrets.VITE_API_URL }}
       VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
+      VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
 
     steps:
       # 0) Inicio del workflow
@@ -27,7 +28,9 @@ jobs:
 
       # 0.b) Debug: confirmamos que VITE_GTM_ID está disponible
       - name: 🚨 Debug VITE_GTM_ID
-        run: echo "VITE_GTM_ID=$VITE_GTM_ID"
+        run: |
+          echo "VITE_GTM_ID=$VITE_GTM_ID"
+          echo "VITE_CLIENT_ID=$VITE_CLIENT_ID"
 
       # 1) Checkout del código
       - name: ⤵️  Checkout código
