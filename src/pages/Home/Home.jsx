@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.scss';
-import HomeLogin from '../../components/HomeLogin/HomeLogin';
-import Navbar from '../../components/Navbar/Navbar';
-import HomeSetup from '../../components/HomeSetup/HomeSetup';
-import HomeStatus from '../../components/HomeStatus/HomeStatus';
-import HomePerfil from '../../components/HomePerfil/HomePerfil';
+import HomeLogin from '../../components/HomeLogin/HomeLogin.jsx';
+import Navbar from '../../components/Navbar/Navbar.jsx';
+import HomeSetup from '../../components/HomeSetup/HomeSetup.jsx';
+import HomeStatus from '../../components/HomeStatus/HomeStatus.jsx';
+import HomePerfil from '../../components/HomePerfil/HomePerfil.jsx';
 
 function Home() {
+  const navigate = useNavigate();
+
   // Token de Google
   const [token, setToken] = useState(
     () => localStorage.getItem('googleCredential') || null
@@ -31,7 +34,9 @@ function Home() {
   const handleLogin = (accessToken) => {
     localStorage.setItem('googleCredential', accessToken);
     setToken(accessToken);
+    navigate('/'); // redirigir tras login si fuera necesario
   };
+
   const handleSetup = () => {
     setShowProfile(false);
     setShowSetup(true);
@@ -48,16 +53,19 @@ function Home() {
     setJourney(data);
     setShowSetup(false);
   };
+
   const handleLogout = () => {
     localStorage.removeItem('googleCredential');
     setToken(null);
     setShowProfile(false);
+    navigate('/login', { replace: true });
   };
 
   // Datos de usuario (reemplaza con tus valores reales o tráelos de un estado/contexto)
   const userFirstName = 'TuNombre';
   const userLastName  = 'TuApellido';
 
+  // Render
   return (
     <div className={styles.homeContainer}>
       {!token ? (

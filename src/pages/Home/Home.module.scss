@@ -1,15 +1,62 @@
+/* src/pages/Home/Home.module.scss */
 .homeContainer {
   display: flex;
   flex-direction: column;
-  height: 100vh;            /* ocupa todo el alto de la ventana */
-  width: 100vw;             /* ocupa todo el ancho de la ventana */
-  background-color: #f5f5f5;/* mismo fondo que el nav */
+  width: 100%;
+  max-width: 1200px;    /* ancho máximo en desktop */
+  margin: 0 auto;       /* centrar */
+  padding: 16px;        /* espacio interno */
+  box-sizing: border-box;
+  min-height: 100vh;    /* full viewport height */
 }
 
 .pageContent {
-  flex: 1;                  /* toma el espacio sobrante bajo el navbar */
+  flex: 1;
+  margin-top: 24px;
+}
+
+/* Ajustes de tipografía global en este módulo */
+h1, h2, h3, p, button {
+  font-size: 1rem;      /* base mobile-friendly */
+  line-height: 1.4;
+}
+
+/* Navbar y botones: escala en móvil */
+.navbar {
   display: flex;
-  align-items: center;      /* centra verticalmente */
-  justify-content: center;  /* centra horizontalmente */
-  padding: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+}
+
+.button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+/* Breakpoint tablets+ */
+@media screen and (min-width: 768px) {
+  .homeContainer {
+    padding: 24px;
+  }
+  h1, h2, h3, p, button {
+    font-size: 1.1rem;
+  }
+  .button {
+    padding: 10px 16px;
+  }
+}
+
+/* Breakpoint desktop */
+@media screen and (min-width: 1024px) {
+  .homeContainer {
+    padding: 32px;
+  }
+  h1, h2, h3, p, button {
+    font-size: 1.2rem;
+  }
+  .button {
+    padding: 12px 20px;
+  }
 }
