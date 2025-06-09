@@ -11,43 +11,34 @@ import HomePerfil from '../../components/HomePerfil/HomePerfil.jsx';
 export default function Home() {
   const navigate = useNavigate();
 
-  // Token de Google
   const [token, setToken] = useState(
     () => localStorage.getItem('googleCredential') || null
   );
 
-  // Estados para el perfil
-  const [profile, setProfile]           = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [errorProfile, setErrorProfile] = useState(null);
 
-  // Control de vistas
   const [showSetup, setShowSetup]     = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
-  // Journey persistido
   const [journey, setJourney] = useState(() => {
     const j = localStorage.getItem('journey');
     return j ? JSON.parse(j) : null;
   });
 
-  // Persistir journey en localStorage
   useEffect(() => {
     if (journey) localStorage.setItem('journey', JSON.stringify(journey));
   }, [journey]);
 
-  // Cuando cambias a “Perfil”, lanza la petición
   useEffect(() => {
     if (!token || !showProfile) return;
-
     (async () => {
+      setLoadingProfile(true);
+      setErrorProfile(null);
       try {
-        setLoadingProfile(true);
-        setErrorProfile(null);
-
-        const res = await fetch(`/api/profile?token=${token}`);
+        const res  = await fetch(`/api/consultarpasos.php?token=${token}`);
         const data = await res.json();
-
         if (data.error) {
           setErrorProfile(data.error);
           setProfile(null);
@@ -64,7 +55,6 @@ export default function Home() {
     })();
   }, [token, showProfile]);
 
-  // Handlers de navegación
   const handleLogin = accessToken => {
     localStorage.setItem('googleCredential', accessToken);
     setToken(accessToken);
@@ -79,7 +69,6 @@ export default function Home() {
     setShowSetup(false);
   };
   const handleProfile = () => {
-    // Iniciar loading *antes* de cambiar showProfile
     setProfile(null);
     setErrorProfile(null);
     setLoadingProfile(true);
@@ -110,7 +99,6 @@ export default function Home() {
           />
           <div className={styles.pageContent}>
             {showProfile ? (
-              // Aquí el guard: mientras carga o no hay profile, muestro loading
               (loadingProfile || !profile) ? (
                 <p className={styles.loading}>Cargando perfil…</p>
               ) : errorProfile ? (
