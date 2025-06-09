@@ -69,7 +69,7 @@ jobs:
           protocol:             ftp
           port:                 21
           local-dir:            dist/
-          server-dir:           perulainen.com/
+          server-dir:           walkingsim.perulainen.com/
           security:             loose
           dangerous-clean-slate: false
 
