@@ -3,41 +3,62 @@ import HomeLogin from './components/HomeLogin/HomeLogin';
 import Navbar from './components/Navbar/Navbar';
 import HomeSetup from './components/HomeSetup/HomeSetup';
 import HomeStatus from './components/HomeStatus/HomeStatus';
+import HomePerfil from './components/HomePerfil/HomePerfil';
 
 function App() {
-  // Cargamos el access token de Google (o null)
-  const [token, setToken] = useState(() =>
-    localStorage.getItem('googleCredential') || null
+  // Token de Google
+  const [token, setToken] = useState(
+    () => localStorage.getItem('googleCredential') || null
   );
-  // Controla si mostramos Setup o Status
+  // Control de vistas
   const [showSetup, setShowSetup] = useState(false);
-  // Trayecto guardado
+  const [showProfile, setShowProfile] = useState(false);
+  // Journey persistido
   const [journey, setJourney] = useState(() => {
     const j = localStorage.getItem('journey');
     return j ? JSON.parse(j) : null;
   });
 
-  // Persistimos el journey
+  // Persistir journey
   useEffect(() => {
     if (journey) {
       localStorage.setItem('journey', JSON.stringify(journey));
     }
   }, [journey]);
 
-  // Cuando recibimos el token, lo guardamos
+  // Login recibe solo el token
   const handleLogin = (accessToken) => {
     localStorage.setItem('googleCredential', accessToken);
     setToken(accessToken);
   };
 
-  const handleSetup = () => setShowSetup(true);
-  const handleStatus = () => setShowSetup(false);
+  const handleSetup = () => {
+    setShowProfile(false);
+    setShowSetup(true);
+  };
+  const handleStatus = () => {
+    setShowProfile(false);
+    setShowSetup(false);
+  };
+  const handleProfile = () => {
+    setShowSetup(false);
+    setShowProfile(true);
+  };
 
-  // Recibe { origin, destination, distance }
   const handleJourneySet = (data) => {
     setJourney(data);
     setShowSetup(false);
   };
+
+  const handleLogout = () => {
+    localStorage.removeItem('googleCredential');
+    setToken(null);
+    setShowProfile(false);
+  };
+
+  // Datos de usuario (reemplaza con tus valores o estados reales)
+  const userFirstName = 'TuNombre';
+  const userLastName  = 'TuApellido';
 
   return (
     <div className="appContainer">
@@ -45,11 +66,23 @@ function App() {
         <HomeLogin onLogin={handleLogin} />
       ) : (
         <>
-          <Navbar onSetup={handleSetup} onStatus={handleStatus} />
-          {showSetup
-            ? <HomeSetup onSave={handleJourneySet} />
-            : <HomeStatus token={token} journey={journey} />
-          }
+          <Navbar
+            onSetup={handleSetup}
+            onStatus={handleStatus}
+            onProfile={handleProfile}
+          />
+
+          {showProfile ? (
+            <HomePerfil
+              firstName={userFirstName}
+              lastName={userLastName}
+              onLogout={handleLogout}
+            />
+          ) : showSetup ? (
+            <HomeSetup onSave={handleJourneySet} />
+          ) : (
+            <HomeStatus token={token} journey={journey} />
+          )}
         </>
       )}
     </div>

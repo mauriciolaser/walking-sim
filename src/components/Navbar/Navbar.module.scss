@@ -2,32 +2,25 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-
-  h1 {
-    font-size: 1.5rem;
-  }
+  padding: 1rem;
+  background-color: #f5f5f5;
 }
 
 .buttons {
   display: flex;
-  gap: 1rem;
 
-  button {
+  > button {
+    margin-left: 0.5rem;
     padding: 0.5rem 1rem;
+    cursor: pointer;
     border: none;
     border-radius: 4px;
-    background: var(--primary-color);
+    background-color: #3498db;
     color: #fff;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: filter 0.2s ease;
+    transition: background-color 0.2s;
 
     &:hover {
-      /* oscurece en un 10% sin usar funciones SASS */
-      filter: brightness(90%);
+      background-color: #2980b9;
     }
   }
 }
