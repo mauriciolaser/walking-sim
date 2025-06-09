@@ -21,18 +21,29 @@ h1, h2, h3, p, button {
   line-height: 1.4;
 }
 
+/* Botones y elementos de estado */
+.button {
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  border-radius: 8px;
+}
+
+.loading {
+  font-style: italic;
+  color: #777;
+}
+
+.error {
+  font-style: italic;
+  color: #c00;
+}
+
 /* Navbar y botones: escala en móvil */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-}
-
-.button {
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  border-radius: 8px;
 }
 
 /* Breakpoint tablets+ */

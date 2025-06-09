@@ -17,7 +17,7 @@ export default function Home() {
   );
 
   // Estados para el perfil
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile]           = useState(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [errorProfile, setErrorProfile] = useState(null);
 
@@ -33,49 +33,64 @@ export default function Home() {
 
   // Persistir journey en localStorage
   useEffect(() => {
-    if (journey) {
-      localStorage.setItem('journey', JSON.stringify(journey));
-    }
+    if (journey) localStorage.setItem('journey', JSON.stringify(journey));
   }, [journey]);
 
-  // Cuando cambias a la vista “Perfil”, lanza la petición
+  // Cuando cambias a “Perfil”, lanza la petición
   useEffect(() => {
-    if (token && showProfile) {
-      setLoadingProfile(true);
-      setErrorProfile(null);
+    if (!token || !showProfile) return;
 
-      fetch(`/api/profile?token=${token}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.error) {
-            setErrorProfile(data.error);
-            setProfile(null);
-          } else {
-            setProfile(data);
-          }
-        })
-        .catch(err => {
-          console.error('Error cargando perfil:', err);
-          setErrorProfile('Error al cargar perfil');
-        })
-        .finally(() => setLoadingProfile(false));
-    }
+    (async () => {
+      try {
+        setLoadingProfile(true);
+        setErrorProfile(null);
+
+        const res = await fetch(`/api/profile?token=${token}`);
+        const data = await res.json();
+
+        if (data.error) {
+          setErrorProfile(data.error);
+          setProfile(null);
+        } else {
+          setProfile(data);
+        }
+      } catch (err) {
+        console.error('Error cargando perfil:', err);
+        setErrorProfile('Error al cargar perfil');
+        setProfile(null);
+      } finally {
+        setLoadingProfile(false);
+      }
+    })();
   }, [token, showProfile]);
 
   // Handlers de navegación
-  const handleLogin   = accessToken => {
+  const handleLogin = accessToken => {
     localStorage.setItem('googleCredential', accessToken);
     setToken(accessToken);
     navigate('/');
   };
-  const handleSetup   = () => { setShowProfile(false); setShowSetup(true); };
-  const handleStatus  = () => { setShowProfile(false); setShowSetup(false); };
-  const handleProfile = () => { setShowSetup(false); setShowProfile(true); };
+  const handleSetup = () => {
+    setShowProfile(false);
+    setShowSetup(true);
+  };
+  const handleStatus = () => {
+    setShowProfile(false);
+    setShowSetup(false);
+  };
+  const handleProfile = () => {
+    // Iniciar loading *antes* de cambiar showProfile
+    setProfile(null);
+    setErrorProfile(null);
+    setLoadingProfile(true);
+    setShowSetup(false);
+    setShowProfile(true);
+  };
   const handleJourneySet = data => {
     setJourney(data);
     setShowSetup(false);
   };
-  const handleLogout  = () => {
+  const handleLogout = () => {
     localStorage.removeItem('googleCredential');
     setToken(null);
     setShowProfile(false);
@@ -95,7 +110,8 @@ export default function Home() {
           />
           <div className={styles.pageContent}>
             {showProfile ? (
-              loadingProfile ? (
+              // Aquí el guard: mientras carga o no hay profile, muestro loading
+              (loadingProfile || !profile) ? (
                 <p className={styles.loading}>Cargando perfil…</p>
               ) : errorProfile ? (
                 <p className={styles.error}>{errorProfile}</p>
