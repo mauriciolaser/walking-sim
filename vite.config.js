@@ -4,6 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: '/',
     server: {
     headers: {
       // Permite postMessage desde ventanas emergentes

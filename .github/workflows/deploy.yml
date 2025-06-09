@@ -1,0 +1,78 @@
+# .github/workflows/deploy.yml
+# ------------------------------------------------------------
+# ► Despliegue manual (workflow_dispatch) vía FTP
+# ► Stack: React + Vite  •  Node LTS 22.16.0
+# ► Alternative D: pasamos la URL como argumento al script
+# ------------------------------------------------------------
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # ─── Inyectamos las variables VITE_* desde Secrets ─────────────────
+    env:
+      VITE_GTM_ID: ${{ secrets.VITE_GTM_ID }}
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      VITE_APP_URL: ${{ secrets.VITE_APP_URL }}
+
+    steps:
+      # 0) Inicio del workflow
+      - name: ⏩ Inicio del workflow
+        run: echo "🚀 Comenzando despliegue de perulainen.com por FTP…"
+
+      # 0.b) Debug: confirmamos que VITE_GTM_ID está disponible
+      - name: 🚨 Debug VITE_GTM_ID
+        run: echo "VITE_GTM_ID=$VITE_GTM_ID"
+
+      # 1) Checkout del código
+      - name: ⤵️  Checkout código
+        uses: actions/checkout@v4
+
+      # 2) Setup de Node.js LTS
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.16.0
+          cache: npm
+
+      # 3) Instalar dependencias
+      - name: 📦 Instalar dependencias
+        run: npm ci
+
+      # 3.b) Instalar yargs para el script CLI
+      - name: 📦 Instalar yargs
+        run: npm install yargs
+
+      # 4) Compilar proyecto con Vite
+      - name: 🏗️  Compilar proyecto
+        run: |
+          echo "🔨 Construyendo con Vite..."
+          npm run build
+          echo "✔️  Build completado en dist/"
+
+      # 5) Mensaje antes de deploy
+      - name: 📤 Preparando subida FTP
+        run: echo "🔄 Cargando carpeta dist/ a tu hosting…"
+
+      # 6) Despliegue vía FTP
+      - name: 🚚 Upload via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:               ${{ secrets.FTP_HOST }}
+          username:             ${{ secrets.FTP_USERNAME }}
+          password:             ${{ secrets.FTP_PASSWORD }}
+          protocol:             ftp
+          port:                 21
+          local-dir:            dist/
+          server-dir:           perulainen.com/
+          security:             loose
+          dangerous-clean-slate: false
+
+      # 10) Fin del workflow
+      - name: ✅ Fin del workflow
+        run: echo "🎉 Deploy completado con éxito."
