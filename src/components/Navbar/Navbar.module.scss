@@ -1,0 +1,33 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+
+  h1 {
+    font-size: 1.5rem;
+  }
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background: var(--primary-color);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: filter 0.2s ease;
+
+    &:hover {
+      /* oscurece en un 10% sin usar funciones SASS */
+      filter: brightness(90%);
+    }
+  }
+}

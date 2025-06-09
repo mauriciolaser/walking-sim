@@ -1,0 +1,43 @@
+/* 1. Definición de Custom Properties */
+:root {
+  --primary-color: #3498db;
+  --font-stack: 'Helvetica Neue', sans-serif;
+  --background-color: #f9f9f9;
+}
+
+/* 2. Importa breakpoints y mixins */
+@import "./breakpoints.scss";
+@import "./mixins.scss";
+
+/* 3. Estilos base usando var(--…) */
+body {
+  margin: 0;
+  font-family: var(--font-stack);
+  color: var(--primary-color);
+  background-color: var(--background-color);
+  width: 100%;
+  height: 100%;
+}
+
+/* 4. Centrado global del App */
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* 5. Contenedor principal dentro de App */
+.appContainer {
+  width: 100%;
+}
+
+/* 6. Container genérico para secciones */
+.container {
+  padding: 2rem;
+
+  @include respond-down(md) {
+    padding: 1rem;
+  }
+}

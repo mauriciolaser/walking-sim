@@ -1,0 +1,12 @@
+// Mixins de respuesta según punto de ruptura
+@mixin respond-down($bp) {
+  @media (max-width: map-get($breakpoints, $bp)) {
+    @content;
+  }
+}
+
+@mixin respond-up($bp) {
+  @media (min-width: map-get($breakpoints, $bp)) {
+    @content;
+  }
+}
