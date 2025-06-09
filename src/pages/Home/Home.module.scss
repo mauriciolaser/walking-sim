@@ -1,0 +1,15 @@
+.homeContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;            /* ocupa todo el alto de la ventana */
+  width: 100vw;             /* ocupa todo el ancho de la ventana */
+  background-color: #f5f5f5;/* mismo fondo que el nav */
+}
+
+.pageContent {
+  flex: 1;                  /* toma el espacio sobrante bajo el navbar */
+  display: flex;
+  align-items: center;      /* centra verticalmente */
+  justify-content: center;  /* centra horizontalmente */
+  padding: 1rem;
+}
